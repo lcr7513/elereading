@@ -1,0 +1,198 @@
+{
+  "entities": {
+    "StudentProfile": {
+      "title": "StudentProfile",
+      "description": "Student profile information including class, grade, name, and reading goals",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique student identifier"
+        },
+        "school": {
+          "type": "string",
+          "description": "School name"
+        },
+        "grade": {
+          "type": "number",
+          "description": "Grade level (1-6)"
+        },
+        "classRoom": {
+          "type": "number",
+          "description": "Classroom number"
+        },
+        "studentNumber": {
+          "type": "number",
+          "description": "Student attendance number"
+        },
+        "name": {
+          "type": "string",
+          "description": "Student full name"
+        },
+        "password": {
+          "type": "string",
+          "description": "Student password"
+        },
+        "status": {
+          "type": "string",
+          "description": "Registration approval status: pending, approved, or rejected"
+        },
+        "appliedAt": {
+          "type": "string",
+          "description": "Date applied"
+        },
+        "approvedAt": {
+          "type": "string",
+          "description": "Date approved"
+        },
+        "rejectReason": {
+          "type": "string",
+          "description": "Reason for rejection if rejected"
+        },
+        "targetCount": {
+          "type": "number",
+          "description": "Target book reading count goal"
+        },
+        "pledge": {
+          "type": "string",
+          "description": "Student reading pledge or promise"
+        },
+        "favoriteGenre": {
+          "type": "string",
+          "description": "Student's favorite book genre"
+        },
+        "motto": {
+          "type": "string",
+          "description": "Reading motto or favorite phrase"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Starting date of reading log"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Avatar character emoji or icon key"
+        }
+      },
+      "required": ["id", "school", "grade", "classRoom", "studentNumber", "name"]
+    },
+    "BookEntry": {
+      "title": "BookEntry",
+      "description": "A book reading log record for a student",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique book entry ID"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date the book was read (YYYY-MM-DD)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the book"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of the book"
+        },
+        "illustrator": {
+          "type": "string",
+          "description": "Illustrator of the book"
+        },
+        "publisher": {
+          "type": "string",
+          "description": "Publisher name"
+        },
+        "pages": {
+          "type": "number",
+          "description": "Page count read"
+        },
+        "genre": {
+          "type": "string",
+          "description": "Book genre category"
+        },
+        "rating": {
+          "type": "number",
+          "description": "Star rating from 1 to 5"
+        },
+        "oneLineReview": {
+          "type": "string",
+          "description": "Brief one-line review"
+        },
+        "stamp": {
+          "type": "string",
+          "description": "Teacher check stamp"
+        },
+        "hasActivity": {
+          "type": "boolean",
+          "description": "Whether an accompanying worksheet activity exists"
+        },
+        "activityId": {
+          "type": "string",
+          "description": "ID of associated activity if any"
+        }
+      },
+      "required": ["id", "date", "title", "author", "pages", "genre", "rating"]
+    },
+    "ActivityData": {
+      "title": "ActivityData",
+      "description": "A post-reading worksheet activity entry",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique activity ID"
+        },
+        "bookId": {
+          "type": "string",
+          "description": "Associated book ID"
+        },
+        "bookTitle": {
+          "type": "string",
+          "description": "Title of the book"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of the book"
+        },
+        "type": {
+          "type": "string",
+          "description": "Worksheet activity type"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date completed (YYYY-MM-DD)"
+        },
+        "content": {
+          "type": "object",
+          "description": "Structured activity worksheet data depending on type"
+        },
+        "teacherStamp": {
+          "type": "string",
+          "description": "Teacher stamp award"
+        },
+        "teacherComment": {
+          "type": "string",
+          "description": "Teacher feedback note"
+        }
+      },
+      "required": ["id", "bookId", "bookTitle", "author", "type", "date"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "StudentProfile",
+      "description": "Collection of student profiles"
+    },
+    "/students/{studentId}/books/{bookId}": {
+      "schema": "BookEntry",
+      "description": "Subcollection of books read by a student"
+    },
+    "/students/{studentId}/activities/{activityId}": {
+      "schema": "ActivityData",
+      "description": "Subcollection of worksheets and activities created by a student"
+    }
+  }
+}

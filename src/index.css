@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body {
+    font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    overscroll-behavior-y: none;
+  }
+
+  /* Prevent automatic iOS zoom on inputs while keeping accessible size */
+  @media screen and (max-width: 768px) {
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    input[type="number"],
+    input[type="search"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
+/* Safe area support for iOS Notch / Dynamic Island and home indicators */
+.safe-top {
+  padding-top: max(env(safe-area-inset-top, 0px), 8px);
+}
+
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
+}
+
+.font-jua {
+  font-family: 'Jua', sans-serif;
+}
+
+.font-gaegu {
+  font-family: 'Gaegu', cursive;
+}
+
+.font-dodum {
+  font-family: 'Gowun Dodum', sans-serif;
+}
+
+/* Hide scrollbar while keeping horizontal scrollability */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Notebook lined pattern */
+.notebook-lines {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    #e2e8f0 31px,
+    #e2e8f0 32px
+  );
+  line-height: 32px;
+}
+
+.grid-paper {
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+}
+
+/* Stamp Effect */
+.stamp-border {
+  border: 3px solid #dc2626;
+  border-radius: 9999px;
+  color: #dc2626;
+  transform: rotate(-10deg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-weight: 800;
+  mask-image: radial-gradient(circle, black 80%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.stamp-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px dashed #ea580c;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+  .print-shadow-none {
+    box-shadow: none !important;
+  }
+  .print-border-black {
+    border-color: #000 !important;
+  }
+}

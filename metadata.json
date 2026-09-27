@@ -1,0 +1,6 @@
+{
+  "name": "초등학생 독서기록장 (에듀트랙 스타일)",
+  "description": "에듀트랙 양식을 반영한 초등학생 맞춤형 독서 기록장. 학생 신규 등록 신청 및 비밀번호 설정, 교사 비밀번호 인증 및 가입 승인/반려/삭제 관리, 독서통장, 9가지 독후 활동 워크시트, 독서나무 스티커판, 인쇄 지원.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
