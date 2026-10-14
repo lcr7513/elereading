@@ -39,6 +39,9 @@ interface HeaderProps {
   onResetData: () => void;
   onTriggerPrint: () => void;
   isCloudSyncing?: boolean;
+  membership?: { tier: 'free' | 'pro' | 'school' };
+  onOpenCheckout?: () => void;
+  onOpenBrochure?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -57,7 +60,10 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenShareModal,
   onResetData,
   onTriggerPrint,
-  isCloudSyncing
+  isCloudSyncing,
+  membership = { tier: 'free' },
+  onOpenCheckout,
+  onOpenBrochure,
 }) => {
   const totalBooks = books.length;
   const progressPercent = Math.min(100, Math.round((totalBooks / (profile.targetCount || 50)) * 100));
@@ -173,6 +179,48 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
+      {/* Mobile Quick Tab Bar & Quick Tools (Always Visible and Active on Mobile) */}
+      <div className="md:hidden bg-amber-100/70 border-b border-amber-200 px-2 py-1.5 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                isActive
+                  ? 'bg-orange-500 text-white shadow-xs'
+                  : 'bg-white text-stone-700 border border-amber-200 hover:bg-amber-50'
+              }`}
+            >
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-orange-600'}`} />
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+        {onOpenBrochure && (
+          <button
+            type="button"
+            onClick={onOpenBrochure}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap bg-amber-500 text-white shadow-xs cursor-pointer"
+          >
+            <Award className="w-3.5 h-3.5 text-yellow-200" />
+            <span>소개서</span>
+          </button>
+        )}
+        {onOpenCheckout && (
+          <button
+            type="button"
+            onClick={onOpenCheckout}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap bg-purple-600 text-white shadow-xs cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+            <span>라이선스</span>
+          </button>
+        )}
+      </div>
+
       {/* 2. Desktop Header View (Full ribbon and tabs) */}
       <div className="hidden md:block">
         {/* Top Banner Ribbon */}
@@ -193,6 +241,38 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-2.5 text-xs">
               {/* App Install Button */}
               <InstallAppButton />
+
+              {/* Brochure Modal Button */}
+              {onOpenBrochure && (
+                <button
+                  type="button"
+                  onClick={onOpenBrochure}
+                  className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/30 flex items-center gap-1 font-bold text-white transition-all hover:scale-102 active:scale-98 shadow-xs cursor-pointer"
+                  title="학교/교장선생님 제출용 1장 소개서"
+                >
+                  <Award className="w-3 h-3 text-yellow-300" />
+                  <span>소개서(브로슈어)</span>
+                </button>
+              )}
+
+              {/* Membership / License Button */}
+              {onOpenCheckout && (
+                <button
+                  type="button"
+                  onClick={onOpenCheckout}
+                  className={`px-3 py-1 rounded-full border flex items-center gap-1.5 font-bold transition-all hover:scale-102 active:scale-98 shadow-xs cursor-pointer ${
+                    membership.tier === 'free'
+                      ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-stone-900 border-yellow-200'
+                      : 'bg-gradient-to-r from-purple-700 to-indigo-800 text-white border-purple-400/50'
+                  }`}
+                  title="학교/학원 정기 라이선스 등록 및 결제"
+                >
+                  <Sparkles className="w-3 h-3 text-amber-900" />
+                  <span>
+                    {membership.tier === 'free' ? '라이선스/유료화 안내' : `라이선스: ${membership.tier.toUpperCase()}`}
+                  </span>
+                </button>
+              )}
 
               {/* Share / QR Modal Button */}
               {onOpenShareModal && (

@@ -35,6 +35,8 @@ interface StudentManagerModalProps {
   isTeacherLoggedIn: boolean;
   onOpenTeacherLogin: () => void;
   onOpenTeacherDashboard: () => void;
+  membership?: { tier: 'free' | 'pro' | 'school'; maxStudents: number };
+  onOpenCheckout?: () => void;
 }
 
 const GENRES: GenreType[] = [
@@ -63,7 +65,9 @@ export const StudentManagerModal: React.FC<StudentManagerModalProps> = ({
   booksByStudent,
   isTeacherLoggedIn,
   onOpenTeacherLogin,
-  onOpenTeacherDashboard
+  onOpenTeacherDashboard,
+  membership = { tier: 'free', maxStudents: 3 },
+  onOpenCheckout,
 }) => {
   const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit'>('list');
   const [editingStudent, setEditingStudent] = useState<StudentProfile | null>(null);
@@ -156,6 +160,15 @@ export const StudentManagerModal: React.FC<StudentManagerModalProps> = ({
     }
 
     if (viewMode === 'add') {
+      // Check free tier student limit
+      if (membership.tier === 'free' && students.length >= membership.maxStudents) {
+        setModalAlert({ 
+          type: 'error', 
+          message: `무료 체험판은 최대 ${membership.maxStudents}명까지만 등록 가능합니다. 상단 '라이선스 안내'에서 학교/프로 라이선스로 업그레이드해주세요!` 
+        });
+        return;
+      }
+
       if (!formData.password || formData.password.trim().length < 2) {
         setModalAlert({ type: 'error', message: '학생 비밀번호를 2자리 이상 설정해 주세요.' });
         return;

@@ -17,9 +17,10 @@ import { readingMilestones } from '../data/initialData';
 interface ReadingTreeProps {
   books: BookEntry[];
   profile: StudentProfile;
+  onOpenAddModal?: () => void;
 }
 
-export const ReadingTree: React.FC<ReadingTreeProps> = ({ books, profile }) => {
+export const ReadingTree: React.FC<ReadingTreeProps> = ({ books, profile, onOpenAddModal }) => {
   const [selectedBookIndex, setSelectedBookIndex] = useState<number | null>(null);
   const targetGoal = profile.targetCount || 50;
   const currentCount = books.length;
@@ -56,11 +57,24 @@ export const ReadingTree: React.FC<ReadingTreeProps> = ({ books, profile }) => {
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/20 text-center">
-            <span className="text-xs text-emerald-200 block font-medium">현재 달성률</span>
-            <div className="text-2xl md:text-3xl font-jua text-yellow-300">
-              {progressRate}% <span className="text-sm font-normal text-white">({currentCount}/{targetGoal}권)</span>
+          <div className="flex items-center gap-3">
+            <div className="bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/20 text-center">
+              <span className="text-xs text-emerald-200 block font-medium">현재 달성률</span>
+              <div className="text-2xl md:text-3xl font-jua text-yellow-300">
+                {progressRate}% <span className="text-sm font-normal text-white">({currentCount}/{targetGoal}권)</span>
+              </div>
             </div>
+
+            {onOpenAddModal && (
+              <button
+                type="button"
+                onClick={onOpenAddModal}
+                className="bg-yellow-400 hover:bg-yellow-300 text-stone-900 font-extrabold px-4 py-3 rounded-2xl shadow-md transition-all active:scale-95 text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span>열매 맺기 (책 기록)</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

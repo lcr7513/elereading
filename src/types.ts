@@ -145,3 +145,26 @@ export interface ReadingMilestone {
   color: string;
   description: string;
 }
+
+export type PlanTier = 'free' | 'pro' | 'school';
+
+export interface MembershipStatus {
+  tier: PlanTier;
+  activatedAt?: string;
+  expiresAt?: string;
+  maxStudents: number;
+  maxBooksPerStudent: number;
+  hasAiTutor: boolean;
+  hasSchoolBranding: boolean;
+  schoolName?: string;
+  licenseKey?: string;
+}
+
+export interface AiReviewFeedback {
+  praise: string;
+  grammarFixes: Array<{ original: string; correction: string; explanation: string }>;
+  deepThinkingQuestions: string[];
+  recommendedKeywords: string[];
+  encouragementBadge: string;
+}
+

@@ -18,12 +18,14 @@ interface PrintablePortfolioProps {
   profile: StudentProfile;
   books: BookEntry[];
   activities: ActivityData[];
+  onBack?: () => void;
 }
 
 export const PrintablePortfolio: React.FC<PrintablePortfolioProps> = ({
   profile,
   books,
-  activities
+  activities,
+  onBack,
 }) => {
   const [includeCover, setIncludeCover] = useState(true);
   const [includeBankbook, setIncludeBankbook] = useState(true);

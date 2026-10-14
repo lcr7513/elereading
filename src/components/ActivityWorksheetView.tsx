@@ -31,6 +31,7 @@ interface ActivityWorksheetViewProps {
   onOpenCreate: (book?: BookEntry) => void;
   onEditActivity: (activity: ActivityData) => void;
   onDeleteActivity: (id: string) => void;
+  onOpenAiReview?: (activity: ActivityData) => void;
 }
 
 export const ActivityWorksheetView: React.FC<ActivityWorksheetViewProps> = ({
@@ -39,7 +40,8 @@ export const ActivityWorksheetView: React.FC<ActivityWorksheetViewProps> = ({
   profile,
   onOpenCreate,
   onEditActivity,
-  onDeleteActivity
+  onDeleteActivity,
+  onOpenAiReview,
 }) => {
   const [selectedActivityId, setSelectedActivityId] = useState<string>(
     activities.length > 0 ? activities[0].id : ''
@@ -259,6 +261,16 @@ export const ActivityWorksheetView: React.FC<ActivityWorksheetViewProps> = ({
                   </div>
 
                   <div className="flex items-center gap-2">
+                    {onOpenAiReview && (
+                      <button
+                        type="button"
+                        onClick={() => onOpenAiReview(selectedActivity)}
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-bold shadow-xs active:scale-95 transition-transform"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                        <span>AI 맞춤법 & 칭찬 첨삭</span>
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => onEditActivity(selectedActivity)}

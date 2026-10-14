@@ -25,6 +25,11 @@ import { PrintablePortfolio } from './components/PrintablePortfolio';
 import { FirebaseStatusModal } from './components/FirebaseStatusModal';
 import { ShareAppModal } from './components/ShareAppModal';
 import { InstallPwaPrompt } from './components/InstallPwaPrompt';
+import { CheckoutModal } from './components/CheckoutModal';
+import { AiReviewModal } from './components/AiReviewModal';
+import { BrochureModal } from './components/BrochureModal';
+import { getMembership, saveMembership } from './services/membershipService';
+import { MembershipStatus } from './types';
 import {
   subscribeToStudents,
   subscribeToStudentBooks,
@@ -64,6 +69,12 @@ export default function App() {
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [isFirebaseStatusOpen, setIsFirebaseStatusOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [isBrochureModalOpen, setIsBrochureModalOpen] = useState(false);
+  const [selectedAiActivity, setSelectedAiActivity] = useState<ActivityData | null>(null);
+
+  // Membership & Commercial Tier State
+  const [membership, setMembership] = useState<MembershipStatus>(() => getMembership());
 
   // Cloud Sync State
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
@@ -561,6 +572,9 @@ export default function App() {
         onResetData={handleResetData}
         onTriggerPrint={() => setActiveTab('print')}
         isCloudSyncing={isCloudSyncing}
+        membership={membership}
+        onOpenCheckout={() => setIsCheckoutModalOpen(true)}
+        onOpenBrochure={() => setIsBrochureModalOpen(true)}
       />
 
       {/* Main Content Sections with mobile bottom navigation offset padding */}
@@ -570,11 +584,12 @@ export default function App() {
             <ReadingBankbook
               profile={currentProfile}
               books={books}
-              onOpenAddModal={() => setIsAddBookModalOpen(true)}
+              onAddBook={handleAddBook}
               onUpdateBook={handleUpdateBook}
               onDeleteBook={handleDeleteBook}
-              onOpenActivity={handleOpenActivityForBook}
-              isTeacherLoggedIn={isTeacherLoggedIn}
+              onOpenActivityForBook={handleOpenActivityForBook}
+              isAddModalOpen={isAddBookModalOpen}
+              setIsAddModalOpen={setIsAddBookModalOpen}
             />
           </div>
         )}
@@ -584,11 +599,10 @@ export default function App() {
             profile={currentProfile}
             books={books}
             activities={activities}
-            onOpenCreateActivity={handleOpenCreateActivity}
+            onOpenCreate={handleOpenCreateActivity}
             onEditActivity={handleEditActivity}
             onDeleteActivity={handleDeleteActivity}
-            onSaveActivity={handleSaveActivity}
-            isTeacherLoggedIn={isTeacherLoggedIn}
+            onOpenAiReview={(act) => setSelectedAiActivity(act)}
           />
         )}
 
@@ -604,7 +618,6 @@ export default function App() {
           <ReadingAnalytics
             profile={currentProfile}
             books={books}
-            activities={activities}
           />
         )}
 
@@ -612,14 +625,17 @@ export default function App() {
           <ProfileSection
             profile={currentProfile}
             students={students}
-            books={books}
-            activities={activities}
-            booksCountByStudent={booksCountByStudent}
-            onSelectStudent={handleSelectStudent}
             onUpdateProfile={handleUpdateStudent}
-            onOpenStudentManager={() => setIsStudentManagerOpen(true)}
-            isTeacherLoggedIn={isTeacherLoggedIn}
+            onSelectStudent={handleSelectStudent}
+            onOpenAddStudentModal={() => setIsStudentManagerOpen(true)}
             onDeleteStudent={handleDeleteStudent}
+            booksByStudentCount={booksCountByStudent}
+            totalBooksRead={books.length}
+            isTeacherLoggedIn={isTeacherLoggedIn}
+            onOpenTeacherLogin={() => setIsTeacherLoginModalOpen(true)}
+            onOpenTeacherDashboard={() => setIsTeacherDashboardOpen(true)}
+            onApproveStudent={handleApproveStudent}
+            onRejectStudent={handleRejectStudent}
           />
         )}
 
@@ -646,6 +662,11 @@ export default function App() {
         onOpenTeacherLogin={() => {
           setIsStudentManagerOpen(false);
           setIsTeacherLoginModalOpen(true);
+        }}
+        membership={membership}
+        onOpenCheckout={() => {
+          setIsStudentManagerOpen(false);
+          setIsCheckoutModalOpen(true);
         }}
       />
 
@@ -751,6 +772,35 @@ export default function App() {
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
       />
+
+      {/* Commercial License / Payment Checkout Modal */}
+      <CheckoutModal
+        isOpen={isCheckoutModalOpen}
+        onClose={() => setIsCheckoutModalOpen(false)}
+        currentMembership={membership}
+        onMembershipUpdated={(newStatus) => setMembership(newStatus)}
+      />
+
+      {/* 1-Page School Proposal Brochure (Printable A4) */}
+      <BrochureModal
+        isOpen={isBrochureModalOpen}
+        onClose={() => setIsBrochureModalOpen(false)}
+        onOpenCheckout={() => {
+          setIsBrochureModalOpen(false);
+          setIsCheckoutModalOpen(true);
+        }}
+      />
+
+      {/* AI Tutor & Proofreading Review Modal */}
+      {selectedAiActivity && (
+        <AiReviewModal
+          isOpen={!!selectedAiActivity}
+          onClose={() => setSelectedAiActivity(null)}
+          activity={selectedAiActivity}
+          membership={membership}
+          onOpenUpgradeModal={() => setIsCheckoutModalOpen(true)}
+        />
+      )}
 
       {/* PWA Mobile App Install Banner / Instructions */}
       <InstallPwaPrompt />
